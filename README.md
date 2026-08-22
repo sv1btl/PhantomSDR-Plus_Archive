@@ -6,6 +6,22 @@ and report issues against.
 
 ## Note: Tested on Debian 12 (Bookworm), Debian 13 (Trixie), Ubuntu 22.04, Ubuntu 24.04.
 
+**New in v.3.8.0**
+
+* **JS8 decoding.** JS8Call's mode, in the browser: all five speeds, with multi-frame messages reassembled into whole sentences instead of shown as fragments. Press **JS8** in the decoder row. Full guide: **[docs/DECODERS.md](docs/DECODERS.md)**, in all seven languages.
+* **A conversation panel, not a spot list.** Messages still arriving sit at the top in green with a blinking cursor — one can take a full minute on Normal — and completed messages list below with frequency, SNR and text, callsigns picked out in green. A dimmed, italic row timed out before its last frame arrived.
+* **JS8 spots reach PSK Reporter**, alongside FT8, FT4 and WSPR. Reported at Normal speed from heartbeats, compound frames and directed messages; group destinations such as `@ALLCALL` never are, because they are not stations. A **📡 JS8 map** button sits beside the FT8 and FT4 ones.
+* **Checked against JS8Call itself**, not only against its own tests: identical to JS8Call's encoder over 2000 vectors, to its message unpackers over 5020 frames, and to its decoder on ten minutes of live 20 m audio — within **0.5 dB** of it at threshold.
+* **The four noise controls work now.** Auto Notch was a dead switch and is live (40 dB on a single carrier); the Noise Blanker is per-channel with look-ahead and cosine ramps rather than hard-zeroing. Every decoder is fed audio taken *before* these controls, so they can no longer stop one working.
+* **QRSS no longer loses traces between rows.** Rows covering more than one bin take the strongest of them: a 200 Hz span at QRSS 6 lost 6% of trace positions entirely before, and none now.
+* **Tidier layout.** The AGC and Filters headings align the same way instead of one imitating the other with spacers, and the gaps between the stacked page blocks are a consistent 3 px.
+* **`fft_size` is 4194304** throughout the installation guide in all seven languages, and the RX-888 mk2 example is the complete `[input]` section that ships with the repository rather than a fragment to assemble.
+* **The installers stop your running receiver before they touch anything.** A new first step lists what is live — the admin panel, the reverse proxy, the statistics server and the receiver itself — and offers to stop it, **defaulting to yes**, then starts back exactly what it stopped once the install finishes. Installing over a live receiver is the most effective way to get a broken result that *looks* like a broken build: the compiler writes over a binary that is still running, and the watchdog restarts the half-written copy mid-compile. Answer `n` and the installer prints the commands and waits for you instead. Unattended runs are covered by `PHANTOM_STOP_SERVICES=y|n`.
+* **Every question now shows its default as a capital letter**, coloured, and spells the answer out — `[Y/n] (ENTER = Yes)` — so pressing ENTER is never a guess. This covers `setup_admin.sh` and `install-stats-server.sh` too, including the prompts that ask before overwriting an existing installation.
+* **Each step is framed**, with its number, a one-line description and a progress bar, and closes with its own verdict — OK, SKIPPED, PARTIAL or FAILED — so one step never runs into the next on screen. The per-step table that `install.txt` has always carried is now printed at the end of the run as well.
+* **`demo.sh` shows you the whole installation before you run it.** It walks through all 18 steps with the real frames, questions and warnings, and **installs nothing** — no package, no service, no file, no compile; every command it would run is printed with a `(not run)` marker. Use `--fast` to skip the pacing and `--auto` to answer every question with its default.
+
+------------------
 
 **New in v.3.7.0**
 
@@ -20,12 +36,16 @@ and report issues against.
 * **The magic-eye indicator now behaves like a real EM84 tube**, following the F1NSK design more closely.
 * **Mobile fixes.** The `/mobile` page follows the band plan as you tune, its digital S-meter reads the same level as the desktop one, and the meter gained an extra segment.
 
+------------------
+
 **New in v.3.6.1**
 
 * **The S-meter / layout variants now switch without reloading the page.** The ⚙️ menu at the top right used to navigate to a separate build of the site (`/analog`, `/digital`, `/v2-analog`, `/v2-digital`), so every switch reloaded everything: the audio stopped, the waterfall cleared and any running decoder was lost. Since the four `App__*_smeter_.svelte` files were merged into one `App.svelte` those "versions" are just two properties of the same page, so the menu now changes them **in place** — the switch is silent and listening continues uninterrupted. Each visitor's choice is remembered in their own browser, and the variant picked in `./recompile.sh` is the **starting** variant a first-time visitor sees.
 * **One desktop build instead of five.** With the variants switchable at runtime, the four extra builds were four identical copies of the same application, so they are gone: `build-all.sh` now produces the desktop page and `/mobile`, and a full rebuild takes **about half as long again** (roughly 29 s against 53 s here). The per-variant scripts `build-analog.sh`, `build-digital.sh`, `build-v2-analog.sh`, `build-v2-digital.sh` and the obsolete `switch-version.sh` have been removed, and the `./recompile.sh` build menu is now simply *all* / *desktop only* / *mobile only*. Old bookmarks to the four retired URLs are not broken — each keeps a small page that redirects to `/`.
 * **The simplified mobile page now follows the band plan as you tune.** On `/mobile` the mode used to change only when you pressed a band button — typing a frequency, or stepping to one, kept whatever mode was selected, so a QSY from 40 m to a broadcast station stayed in LSB. The mode now follows `bands-config.js` whenever the dial moves into a different band or a different mode segment, exactly as the full interface has always done. A mode you choose by hand still sticks while you move about inside that segment; outside every defined band the mode is left alone; and while **RADEL/RADEU** are running they keep the receiver, so tuning does not drop the RADE decoder back into a listening mode.
 * **Your frequency now follows you between the two mobile views.** `/mobile` and the extended mobile view are separate pages, so switching between them reloaded the site and dropped you back on the receiver's default frequency. Both switch buttons now carry the current frequency and mode in the link, and both pages read it on arrival, so you stay on the signal you were listening to. The address bar keeps up with your tuning as well, which means reloading the page, bookmarking it, or sending the link to someone else all return to that exact frequency. The **mode follows the band plan in `bands-config.js`**: your own mode travels with you, but where the other view has no equivalent for it the band plan decides — a broadcast frequency arrives in AM, 40 m in LSB, a CW segment in CW. `SAM` on `/mobile` maps to AM with the synchronous detector in the extended view and back again, and a frequency outside the receiver's coverage is pulled back to the nearest edge.
+
+------------------
 
 **New in v.3.6.0**
 
@@ -51,6 +71,8 @@ and report issues against.
 * The four start scripts — `start-rx888mk2.sh`, `start-airspyhf.sh`, `start-rtl.sh` and `start-rsp1a.sh` — now **tell you what they are doing** instead of detaching in silence. Each one mirrors the start-up log to your terminal while the server comes up and then prints a summary saying whether the receiver, `spectrumserver`, the **RADE sidecar** and **websdr.org registration** are all up, before handing back the prompt; `Ctrl-C` stops only the mirroring, never the server. Add `-q` for the previous two-line output. The **RADE sidecar is now built into the start scripts** — it starts once the server is confirmed running, is restarted on its own if it exits (without restarting the server), is stopped by `stop-websdr.sh`, and can be skipped with `RADE_ENABLED=0`; where RADE is not installed the server starts normally and the summary just says the sidecar was not activated. Each script also reads your `.toml` and reports whether **[websdr.org] enabled** and **[websdr] register_online** are switched on, then waits for websdr.org to answer so the registration can be seen succeeding. Finally, `spectrumserver`'s own output — which was previously discarded — is kept in **`spectrumserver.log`** (rotating at 10 MB), with the `[WebSDROrg]` lines also copied into `logwebsdr.txt` — minus the routine `/~~orgstatus` and keep-alive-ping chatter, so what you read there is the registration story and any errors, not a running tally.
 * The Admin Panel's Spot Reporting page now keeps **two separate counters**. The **SPOTS UPLOADED PER DECODER** tiles (FT8 / FT4 / WSPR) count uploads **since the daemon last started**, with the decode count and queue depth under each; a decoder whose destination is switched off shows `reporting off` instead of a bare `0`. The number beside each **BANDS & MODES** checkbox is that band+mode's **all-time** upload total, stored in `autorun-totals.json` so it survives restarts — a leading dot (`·123`) means the slot has decoded but not yet uploaded. 
 
+------------------
+
 **New in v. 3.5.0**
 
 - **Automatic spot reporting to PSK Reporter and WSPRnet** — a built-in *autorun* engine decodes signals off-air locally and uploads your spots to the reporting networks, with no extra software required:
@@ -66,6 +88,8 @@ and report issues against.
   - FAX no longer discards your LPM / IOC / shift selection when the decoder is activated,
   - HF FAX and NAVTEX now switch the receiver to USB *before* starting, so the retune is never fed into the decoder, and SSTV picks the sideband from the band (LSB below 10 MHz, USB above) while still honouring a manual change.
 - **SSTV no longer triggers on noise** — a static crash, a spark or mains hash used to be enough to start a decode. Every detection gate now has an absolute reference: a tonality test on the sync and VIS tones, a confirmation pass that must predict the next lines before anything is drawn, and a signal-presence gate. Forced modes are verified the same way instead of painting noise immediately.
+
+------------------
 
 **New in v. 3.4.0**
 
@@ -86,6 +110,8 @@ and report issues against.
 - Emoticons in the chat are more stable now.
 - 'Screws" in four angles in all divs, just for fun... 
 
+------------------
+
 **New in v. 3.3.3**
 
 - All the install scripts are redesigned.
@@ -97,6 +123,8 @@ and report issues against.
 - Emoticons are added for use in the chat window
 - Total bugs clean for server's stability.
 
+------------------
+
 **New in v. 3.2.1**
 
 - users and stats now include maps,
@@ -105,6 +133,8 @@ and report issues against.
 - new sstv, Robot 36 decoder is added, band-pass filter 1100–2400 Hz and improvements to all sstv decoders,
 - new rade_install and update script,
 - Total bugs clean for server's stability.
+
+------------------
 
 **New in v. 3.2.0**
 
@@ -115,6 +145,8 @@ and report issues against.
 - New colored spectrum, with waterfall colour scale,
 - CTCSS is now working, tracing subtones and opening the mute when a signal with subtone is received.
 - Total bugs clean for server's stability.
+
+------------------
 
 **New in v. 3.1.1**
 - Decoders in mobile version:
@@ -129,6 +161,8 @@ A small but very importand change in buffer (frontend/src/audio.js) which minimi
 In .toml has been added an offset for analog smeter, along with the previous for digital. Now you can adjust the two smeters to show the same. Micro-trimming are also kept in analog smeter files in " function _smeterTick -> const visualGain = ". The smeters are calibrated out of the box now under my conditions using a signal generator, but you maybe want to play with them.
 - Map registration:
 You can now register your WebSDR in both http://list.novasdr.fun/ (or the same http://list.phantomsdr.fun/) AND https://sdr-list.xyz. Changes in .toml file and src/spectrumeserver.cpp (in backend).
+
+------------------
 
 **New in v. 3.1.0**
 
