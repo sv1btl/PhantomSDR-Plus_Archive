@@ -6,6 +6,16 @@ and report issues against.
 
 ## Note: Tested on Debian 12 (Bookworm), Debian 13 (Trixie), Ubuntu 22.04, Ubuntu 24.04.
 
+**New in v.4.1.0**
+
+* **QRG Sync on the receiver page.** A new **QRG Sync** button beside IF Filters lets the page follow your own transceiver by itself, with no desktop application: the browser talks straight to the TCI server of ExpertSDR, AetherSDR or Thetis on your computer. Frequency, mode and filter width follow in both directions — turn the rig's dial or press its FIL button and the receiver follows, click the waterfall or pick an IF filter and the rig follows — and the page falls silent while you transmit. On an Icom IC-7300 the IF filters select FIL1, FIL2 and FIL3 without ever changing the widths set on the radio. Rigs without TCI — the IC-7300 and most other CAT rigs Hamlib supports — work through a small bridge, `tci-bridge/tci-rigctld.mjs`, run next to the radio. Tested on an IC-7300. Full section, in all seven languages and in the offline PDFs: **[docs/RIG_CONTROL.md](docs/RIG_CONTROL.md)** under *QRG Sync on the receiver page*.
+* **Transceiver control from the desktop app.** [Desktop PhantomSDR+](https://www.dropbox.com/scl/fo/kjwj96zg3kj7dgq4fjef9/APnA3c9hhv4hk3YMGIGjH7s?rlkey=jfiwklly63kv73poalx631pk3&st=m37uvaym&dl=0) 4.0 adds a **Rig** menu that keeps your own transceiver and a receiver window in step — frequency, mode and filter width, in either direction or both — and can mute the receiver while you transmit. Besides PhantomSDR-Plus it drives KiwiSDR, PA3FWM WebSDR and UberSDR receivers. It talks to Icom, Yaesu, Kenwood, Elecraft, FlexRadio and QRP Labs rigs directly, to every other rig through Hamlib, and to flrig. The receiver page gained the matching filter and mute functions in its CATsync API. Full manual, in all seven languages and in the offline PDFs: **[docs/RIG_CONTROL.md](docs/RIG_CONTROL.md)**.
+* **The CATsync Tool now hears back from the receiver.** A waterfall click, a passband drag or a mode change reaches the rig in the tool's PA3FWM WebSDR mode, because the page reports its real frequency and mode the way a KiwiSDR does.
+* **A 💾 Desktop applications button** under Open Additional Info, beside System Resources, opens the download folder of Desktop PhantomSDR+. The popup button row (VFO, Modes, Bands, IF Filters, QRG Sync) now has plain labels of one size.
+* **Admin panel fixes.** *Clear Logs* no longer fails with Permission denied on `admin.log` and `proxy.log` when the panel runs as systemd units, and the admin unit written by `setup_admin.sh` carries `KillMode=process`, so restarting the panel no longer takes the receiver off the air.
+
+------------------
+
 **New in v.4.0.0**
 
 * **Two-site receive diversity.** Pair your receiver with a second one somewhere else and listen to whichever site currently has the better signal, so a fade at one is covered by the other. The second receiver can be another PhantomSDR-Plus, a KiwiSDR, an UberSDR or a WebSDR — the first three need nothing at all beyond the listener's browser, and only a WebSDR needs a small relay on your own server. Alignment takes about fifteen seconds. Full section: **[docs/RECEIVE_DIVERSITY.md](docs/RECEIVE_DIVERSITY.md)**.
