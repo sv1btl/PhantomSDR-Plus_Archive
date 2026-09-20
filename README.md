@@ -1,6 +1,6 @@
 # PhantomSDR-Plus WebSDR - Archive
 
-**Maintained by SV1BTL.** The current version is 3.7.0, and the project lives at
+**Maintained by SV1BTL.** The current version is 4.2.0, and the project lives at
 **https://github.com/sv1btl/PhantomSDR-Plus** — that is the one to clone, link to
 and report issues against.
 
