@@ -6,6 +6,13 @@ and report issues against.
 
 ## Note: Tested on Debian 12 (Bookworm), Debian 13 (Trixie), Ubuntu 22.04, Ubuntu 24.04.
 
+**What's new in v.5.2.1**
+
+* **An audio analyser.** The **📊 Show** button in the Spectrogram section now opens a full audio analyser: the demodulated audio with a dB grid and peak hold, an axis that follows the mode (reversed in LSB), the recommended bandwidths and your current filter, and an RF view of the station in AM and FM. Under it, the station's occupied width with a within / wide / splatter verdict, and in USB/LSB an SSB audio report — tonal balance against Standard, DX or ESSB, compression, mains hum, residual carrier and opposite sideband — with a curve to compare before and after and a listening report to download and send. In AM and FM an AM/FM report takes its place — modulation depth and sideband balance, FM deviation and 99 % bandwidth, carrier offset, audio bandwidth, CTCSS tone and hum. No zoom is needed: while it is open the analyser keeps its own fine-detail view of the station. You can tune and change the mode from its header, and its colours show how far each part of the spectrum stands above the noise. A Mute button lets you analyse your own transmission without feeding it back into the microphone. Adapted from PhantomSDR-ORSAT by F1NSK. See **[docs/USER_GUIDE.md](docs/USER_GUIDE.md)**.
+* **Band buttons remember your frequency.** Coming back to a band tunes the last frequency you used there, with the band's zoom, brightness and contrast as before; a second click on the active band button goes back to the band's default. A frequency link in the chat now frames its band the way **To Band** does. See **[docs/USER_GUIDE.md](docs/USER_GUIDE.md)**.
+
+------------------
+
 **What's new in v.5.2.0**
 
 * **Show All — the station's other receivers under your waterfall.** On a station with more than one receiver, a **Show All** checkbox after the receiver buttons puts each other receiver under the main waterfall as a live strip: its spectrum and waterfall, with its own markers and frequency scale, in its own colours and levels, the newest line at the top. Hover over it to read a frequency and the nearest marker; click and that receiver opens there, in the same tab — on a marker in the marker's mode. It is off until the listener ticks it, and costs about 10 KB/s per listener who does; each strip is a waterfall-only socket, so it is not counted as a listener on the other receiver, and the server needs no change. See **[docs/MULTI_RECEIVER.md](docs/MULTI_RECEIVER.md)**.
